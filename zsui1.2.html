@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title></title>
+<link rel="stylesheet" href="css/xrui1.2.min.css">
+<script type="text/javascript" src="js/jquery1.7.2.min.js"></script>
+<script type="text/javascript" src="js/xrui1.2.min.js"></script>
+
+</head>
+<body>
+<div class="orderMain">
+    <button >多个底部菜单</button>
+    <button >居中确定框</button>
+    <button >居中警告框</button>
+</div>
+<script>
+    $(function(){
+        $('.orderMain').on('click', 'button', function (e) {
+            e.preventDefault();
+            var type = $.trim($(this).text());	//去掉首尾空格
+            /**
+             * 居中警告模态窗口
+             * @param {Object} msg		主要内容,必填
+             * @param {Object} hdMsg	标题,如果为空或不填不显示
+             * @param {Object} callback 回调函数
+             * @param {Object} sureObj	确定按钮样式{text:按钮文字,class:新增的按钮class,msgClass:新增的内容class}
+             */
+            if(type == '居中警告框'){
+                xrAlert({msg:'居中显示的确定模态框',hbMsg:'确认信息'});
+            }
+
+            /**
+             * 居中确定模态窗口
+             * @param {Object} msg  	内容文本,必填
+             * @param {Object} hdMsg	标题,如果为空或不填不显示
+             * @param {Object} sureObj	确定按钮样式{text:按钮文字,class:新增的按钮class,msgClass:新增的内容class}
+             * @param {Object} closeObj	取消按钮{text:按钮文字,class:新增的按钮class,msgClass:新增的标题class}
+             */
+            if(type == '居中确定框'){
+                var abcd=1;
+                $(document).off('xrConfirm_modal:sure').one('xrConfirm_modal:sure', function () {
+                    console.log('确定'+abcd);
+                });
+                $(document).off('xrConfirm_modal:close').one('xrConfirm_modal:close', function () {
+                    console.log('取消'+abcd);
+                });
+                xrConfirm({msg:'居中显示的确定模态框',hdMsg:'确认信息'});
+            }
+            /**
+             * 底部多个确定模态框
+             * @param {Object} sureObj	多个按钮html,必填
+             */
+            if (type == '多个底部菜单') {
+                var sureObj = $("<div class='xr_btn_confirm sureUnpublish'>让我去死</div><div class='xr_btn_confirm rePublish'>我不去死</div>");
+                sureObj.off("click").on("click", function (e) {
+                    e.preventDefault();
+                    var _self = $(this);
+                    if(_self.hasClass('sureUnpublish')){
+                        xrAlert({msg:"你去死吧",callback:function(){console.log(1111)},width:100,positions:'xr_dialog_bot'});
+                    }else if(_self.hasClass('rePublish')){
+                        xrAlert({msg:"不死也要死",hdMsg:'警告'});
+                    }
+                });
+                xrMoreConfirmBot({sureObj:sureObj,callback:function(){console.log('取消')},onlyBtnClose:true});
+                return;
+            }
+
+        });
+    });
+</script>
+</body>
+</html>
